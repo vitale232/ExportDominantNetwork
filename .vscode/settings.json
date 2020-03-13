@@ -15,5 +15,6 @@
         "routeid",
         "strftime",
         "strptime"
-    ]
+    ],
+    "python.linting.banditEnabled": true
 }
