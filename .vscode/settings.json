@@ -10,6 +10,7 @@
         "lrsn",
         "olaps",
         "rdbms",
+        "rhdominant",
         "rhutils",
         "routeid",
         "strftime",

@@ -11,8 +11,8 @@ class Toolbox(object):
     def __init__(self):
         """Define the toolbox (the name of the toolbox is the name of the
         .pyt file)."""
-        self.label = 'R&H Utilities'
-        self.alias = 'rhutils'
+        self.label = 'Export Dominant Network'
+        self.alias = 'rhdominant'
 
         # List of tool classes associated with this toolbox
         self.tools = [ExportDominantNetwork]
