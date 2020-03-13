@@ -118,6 +118,7 @@ class ExportDominantNetwork(object):
         try:
             if arcpy.CheckExtension('highways') != 'Available':
                 raise Exception
+            arcpy.CalculateRouteConcurrencies_locref
             arcpy.MakeRouteEventLayer_lr
             arcpy.Erase_analysis
             arcpy.DeleteFeatures_management
