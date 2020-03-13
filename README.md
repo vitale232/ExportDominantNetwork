@@ -1,8 +1,14 @@
-Export Dominant Network from R&H
-================================
+# Export Dominant Network from R&H
 
-Title  Export Dominant Network from R&H
----------------------------------------
+This tool is designed to remove the non-dominant routes from an Esri ArcGIS Desktop Roads and Highways Advanced Linear Referencing System (ALRS/LRS). The Roads and Highways data model allows for route concurrencies, which are two roadway features that overlap one another. For reporting purposes, overlapping roadways are generally considered as a single piece of pavement. Thus, simply summing the calibrated length of the route features will lead to an over-estimation of the centerline miles present.
+
+This relies on the assumption that your data uses Route Dominance, a Roads and Highways concept, and that you have an ALRS that is built to the [R&H Data Model specification}(https://desktop.arcgis.com/en/arcmap/latest/extensions/roads-and-highways/alrs-data-model.htm) 
+
+Mostly, we are assuming that concurrent routes are built using the same centerline, and that you have Route Dominance enabled and configured such that you will not have a dominance tie (i.e. two routes are equivalent given the dominance rules).
+
+# Tool documentation
+
+This documentation is also available in the Geoprocessing Tool GUI.
 
 Summary
 -------
@@ -34,99 +40,43 @@ For more information regarding the expected data schema, see the Esri Roads and 
 Syntax
 ------
 
-ExportDominantNetwork\_rhutils (input\_lrsn\_fc, route\_id\_field, from\_date\_field, to\_date\_field, output\_gdb, temporal\_view\_date, {save\_intermediary\_steps}, {validate\_results})  
+ExportDominantNetwork\_rhdominant (input\_lrsn\_fc, route\_id\_field, from\_date\_field, to\_date\_field, output\_gdb, temporal\_view\_date, {save\_intermediary\_steps}, {validate\_results})  
   
 
-**Parameter**
 
-**Explanation**
-
-**Data Type**
-
-input\_lrsn\_fc
-
-Dialog Reference  
+**input\_lrsn\_fc**
 
 The input feature class, which must be a valid Roads and Highways Linear Referencing System Network (LRSN). Must be stored in a Roads and Highways database with a valid ALRS.
 
-There is no python reference for this parameter.
 
-Feature Class
-
-route\_id\_field
-
-Dialog Reference  
+**route\_id\_field**
 
 The name of the field on the Input Route Network that contains the R&H route IDs. Must be of type "String"
 
-There is no python reference for this parameter.
-
-String
-
-from\_date\_field
-
-Dialog Reference  
+**from\_date\_field**
 
 The name of the field on the Input Route Network that contains the R&H "from date". Must be of type "Date"
 
-There is no python reference for this parameter.
-
-String
-
-to\_date\_field
-
-Dialog Reference  
+**to\_date\_field**
 
 The name of the field on the Input Route Network that contains the R&H "todate". Must be of type "Date"
 
-There is no python reference for this parameter.
-
-String
-
-output\_gdb
-
-Dialog Reference  
+**output\_gdb**
 
 The output location for the final dominant route network and, optionally, intermediary geoprocessing steps
 
-There is no python reference for this parameter.
-
-Workspace
-
-temporal\_view\_date
-
-Dialog Reference  
+**temporal\_view\_date**
 
 The temporal view date for the network.
 
-There is no python reference for this parameter.
-
-Date
-
-save\_intermediary\_steps (Optional)
-
-Dialog Reference  
+**save\_intermediary\_steps (Optional)**
 
 If checked (the default), the various intermediary geoprocessing steps will be saved to the Output Geodatabase.
 
-There is no python reference for this parameter.
-
-Boolean
-
-validate\_results (Optional)
-
-Dialog Reference  
+**validate\_results (Optional)**
 
 If checked (the default), the output Dominant Route Network will be analyzed with the Intersect Geoprocessing tool. If there are overlapping features found with the Intersect tool, they will be saved to the Output Geodatabase with the suffix "\_OVERLAPS". If there are none, the file will not appear in the Output Geodatabase.
 
-There is no python reference for this parameter.
-
-Boolean
-
-Code Samples
-------------
-
-There are no code samples for this tool.
 
 Tags
 ----
@@ -141,4 +91,17 @@ There are no credits for this item.
 Use limitations
 ---------------
 
-There are no access and use limitations for this item.
+This tool requires the Roads and Highways extension for ArcGIS. It's only known to work when the **Input Routes Network** is in a file geodatabase or a SQL Server 2016 SDE relational database. It also requires elevated licenses to access some geoprocessing tools.
+
+# Repository Structure
+
+## ./src
+The `./src` directory contains the [Python Toolbox](https://desktop.arcgis.com/en/arcmap/10.5/analyze/creating-tools/a-quick-tour-of-python-toolboxes.htm)
+
+The file with the `.pyt` tool is written in `Python 2.7.13` syntax. The `.pyt` extension allows the ArcGIS Python interpreter know it can expect a certain class structure, so that it can construct the GUI.
+
+The `.xml` files are the documentation for the tool. Keep the tool and the documentation in the same directory, so that the `Show Help` and `Tool Help` buttons work correctly in the ArcGIS Desktop Geoprocessing Tool GUI.
+
+## ./DataReviewer
+
+The `./DataReviewer` directory contains a file called `nonmon.rbj`. This is a reviewer batch job that will execute the Non-Monotonic Polyline Data Reviewer check via a batch job. The Data Reviewer extension is included with Roads and Highways. It is highly suggested you run the Non-Monotonic Polyline Data Reviewer check on the output network to ensure the geoprocessing hasn't messed up route calibration.
