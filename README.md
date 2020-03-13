@@ -15,8 +15,6 @@ Summary
 
 Exports only the dominant routes from a Roads and Highways ALRS. That is to say, in the event of a route concurrency, the subordinate route will be removed. This tool requires that dominance rules are established for the Roads and Highways Linear Referencing System Network (LRSN).
 
-  
-
 Usage
 -----
 
@@ -34,8 +32,6 @@ Usage
     
 
 For more information regarding the expected data schema, see the Esri Roads and Highways documentation: https://desktop.arcgis.com/en/arcmap/latest/extensions/roads-and-highways/alrs-data-model.htm
-
-  
 
 Syntax
 ------
@@ -92,6 +88,24 @@ Use limitations
 ---------------
 
 This tool requires the Roads and Highways extension for ArcGIS. It's only known to work when the **Input Routes Network** is in a file geodatabase or a SQL Server 2016 SDE relational database. It also requires elevated licenses to access some geoprocessing tools.
+
+# Installation
+## With Git
+If you have a git client installed on your computer, you can clone the repository using the following command:
+
+```bash
+git clone https://github.com/vitale232/ExportDominantNetwork.git
+```
+
+Once the repository is cloned, simply navigate to the `./src` directory using ArcGIS Desktop or ArcCatalog, and you should see a toolbox called "Export Dominant Network from R&H.pyt". Expand the toolbox, double click the tool, and you should be good to go.
+
+## Without Git
+
+If you do not have git, you can click on the green "Clone or Download" button towards the top of this page. Select the "Download Zip" option. When the download is complete, unzip the directory onto your computer, navigate to the `./src` directory using ArcGIS Desktop or ArcCatalog, and you should see a toolbox called "Export Dominant Network from R&H.pyt". Expand the toolbox, double click the tool, and you should be good to go.
+
+## Moving the Tool from the Repository
+
+The tool does not need to remain in the git repository. If you want to move the tool from the `./src` directory, be sure to keep all of the contents of the `src` directory together. If the `.pyt` file and the `.xml` files are not kept together, the tools documentation will not work.
 
 # Repository Structure
 
