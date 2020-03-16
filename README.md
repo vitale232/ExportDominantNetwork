@@ -26,7 +26,7 @@ Usage
     
 *   Outputs numerous files to disk (optional)
     
-*   Requires that the Input Route Network is stored in a Roads and Highways geodatabase with an ALRS. This is due to the relieance of the Calculate Route Concurrencies tool in the Location Referencing toolbox on the ability to find the Lrs\_Metadata table.
+*   Requires that the Input Route Network is stored in a Roads and Highways geodatabase with an ALRS. This is due to the reliance of the Calculate Route Concurrencies tool in the Location Referencing toolbox on the ability to find the Lrs\_Metadata table.
     
 *   The final dominant network will be the Input Route Network feature class name with the suffix "\_DOMINANT\_NETWORK", which can be found in the Output Geodatabase
     
@@ -55,7 +55,7 @@ The name of the field on the Input Route Network that contains the R&H "from dat
 
 **to\_date\_field**
 
-The name of the field on the Input Route Network that contains the R&H "todate". Must be of type "Date"
+The name of the field on the Input Route Network that contains the R&H "to date". Must be of type "Date"
 
 **output\_gdb**
 
@@ -97,20 +97,20 @@ If you have a git client installed on your computer, you can clone the repositor
 git clone https://github.com/vitale232/ExportDominantNetwork.git
 ```
 
-Once the repository is cloned, simply navigate to the `./src` directory using ArcGIS Desktop or ArcCatalog, and you should see a toolbox called "Export Dominant Network from R&H.pyt". Expand the toolbox, double click the tool, and you should be good to go.
+Once the repository is cloned, simply navigate to the `./Toolbox` directory using ArcGIS Desktop or ArcCatalog, and you should see a toolbox called "Export Dominant Network from R&H.pyt". Expand the toolbox, double click the tool, and you should be good to go.
 
 ## Without Git
 
-If you do not have git, you can click on the green "Clone or Download" button towards the top of this page. Select the "Download Zip" option. When the download is complete, unzip the directory onto your computer, navigate to the `./src` directory using ArcGIS Desktop or ArcCatalog, and you should see a toolbox called "Export Dominant Network from R&H.pyt". Expand the toolbox, double click the tool, and you should be good to go.
+If you do not have git, you can click on the green "Clone or Download" button towards the top of this page. Select the "Download Zip" option. When the download is complete, unzip the directory onto your computer, navigate to the `./Toolbox` directory using ArcGIS Desktop or ArcCatalog, and you should see a toolbox called "Export Dominant Network from R&H.pyt". Expand the toolbox, double click the tool, and you should be good to go.
 
 ## Moving the Tool from the Repository
 
-The tool does not need to remain in the git repository. If you want to move the tool from the `./src` directory, be sure to keep all of the contents of the `src` directory together. If the `.pyt` file and the `.xml` files are not kept together, the tools documentation will not work.
+The tool does not need to remain in the git repository. If you want to move the tool from the `./Toolbox` directory, be sure to keep all of the contents of the `Toolbox` directory together. If the `.pyt` file and the `.xml` files are not kept together, the tools documentation will not work.
 
 # Repository Structure
 
-## ./src
-The `./src` directory contains the [Python Toolbox](https://desktop.arcgis.com/en/arcmap/10.5/analyze/creating-tools/a-quick-tour-of-python-toolboxes.htm)
+## ./Toolbox
+The `./Toolbox` directory contains the [Python Toolbox](https://desktop.arcgis.com/en/arcmap/10.5/analyze/creating-tools/a-quick-tour-of-python-toolboxes.htm)
 
 The file with the `.pyt` tool is written in `Python 2.7.13` syntax. The `.pyt` extension allows the ArcGIS Python interpreter know it can expect a certain class structure, so that it can construct the GUI.
 
