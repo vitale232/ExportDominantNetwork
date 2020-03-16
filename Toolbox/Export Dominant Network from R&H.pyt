@@ -147,6 +147,7 @@ class ExportDominantNetwork(object):
 
             ## Look for commone FromDate field names in string type fields when the Input Route Network
             ## parameter is changed
+            if not parameters[2].altered:
                 from_date_regex = re.compile('from_date|fromdate')
                 found_from_date = False
                 fields = arcpy.ListFields(parameters[0].valueAsText)
@@ -160,6 +161,7 @@ class ExportDominantNetwork(object):
                             found_from_date = True
                             break
 
+            if not parameters[3].altered:
             ## Look for commone ToDate field names in string type fields when the Input Route Network
             ## parameter is changed
                 to_date_regex = re.compile('to_date|todate')
