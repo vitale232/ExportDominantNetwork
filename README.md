@@ -40,38 +40,16 @@ ExportDominantNetwork\_rhdominant (input\_lrsn\_fc, route\_id\_field, from\_date
   
 
 
-**input\_lrsn\_fc**
-
-The input feature class, which must be a valid Roads and Highways Linear Referencing System Network (LRSN). Must be stored in a Roads and Highways database with a valid ALRS.
-
-
-**route\_id\_field**
-
-The name of the field on the Input Route Network that contains the R&H route IDs. Must be of type "String"
-
-**from\_date\_field**
-
-The name of the field on the Input Route Network that contains the R&H "from date". Must be of type "Date"
-
-**to\_date\_field**
-
-The name of the field on the Input Route Network that contains the R&H "to date". Must be of type "Date"
-
-**output\_gdb**
-
-The output location for the final dominant route network and, optionally, intermediary geoprocessing steps
-
-**temporal\_view\_date**
-
-The temporal view date for the network.
-
-**save\_intermediary\_steps (Optional)**
-
-If checked (the default), the various intermediary geoprocessing steps will be saved to the Output Geodatabase.
-
-**validate\_results (Optional)**
-
-If checked (the default), the output Dominant Route Network will be analyzed with the Intersect Geoprocessing tool. If there are overlapping features found with the Intersect tool, they will be saved to the Output Geodatabase with the suffix "\_OVERLAPS". If there are none, the file will not appear in the Output Geodatabase.
+| Parameter        | Explanation   |
+| ---------------- | ------------- |
+| input\_lrsn\_fc                      | The input feature class, which must be a valid Roads and Highways Linear Referencing System Network (LRSN). Must be stored in a Roads and Highways database with a valid ALRS. |
+| route\_id\_field                     | The name of the field on the Input Route Network that contains the R&H route IDs. Must be of type "String" |
+| from\_date\_field                    | The name of the field on the Input Route Network that contains the R&H "from date". Must be of type "Date" |
+| to\_date\_field                      | The name of the field on the Input Route Network that contains the R&H "to date". Must be of type "Date" |
+| output\_gdb                          | The output location for the final dominant route network and, optionally, intermediary geoprocessing steps |
+| temporal\_view\_date                 | The temporal view date for the network. |
+| save\_intermediary\_steps (Optional) | If checked (the default), the various intermediary geoprocessing steps will be saved to the Output Geodatabase. |
+| validate\_results (Optional)         | If checked (the default), the output Dominant Route Network will be analyzed with the Intersect Geoprocessing tool. If there are overlapping features found with the Intersect tool, they will be saved to the Output Geodatabase with the suffix "\_OVERLAPS". If there are none, the file will not appear in the Output Geodatabase. |
 
 
 Tags
