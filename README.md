@@ -1,6 +1,6 @@
 # Export Dominant Network from R&H
 
-This tool is designed to remove the non-dominant routes from an Esri ArcGIS Desktop Roads and Highways Advanced Linear Referencing System (ALRS/LRS). The Roads and Highways data model allows for route concurrencies, which are two roadway features that overlap one another. For reporting purposes, overlapping roadways are generally considered as a single piece of pavement. Thus, simply summing the calibrated length of the route features will lead to an over-estimation of the centerline miles present.
+This tool is designed to remove the subordinate (non-dominant) routes from an Esri ArcGIS Desktop Roads and Highways Advanced Linear Referencing System (ALRS/LRS). The Roads and Highways data model allows for route concurrencies, which are two roadway features that overlap one another. For reporting purposes, overlapping roadways are generally considered as a single piece of pavement. Thus, simply summing the calibrated length of the route features will lead to an over-estimation of the centerline miles present.
 
 This relies on the assumption that your data uses Route Dominance, a Roads and Highways concept, and that you have an ALRS that is built to the [R&H Data Model specification](https://desktop.arcgis.com/en/arcmap/latest/extensions/roads-and-highways/alrs-data-model.htm) 
 
