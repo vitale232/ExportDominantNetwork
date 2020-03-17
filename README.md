@@ -48,7 +48,7 @@ ExportDominantNetwork\_rhdominant (input\_lrsn\_fc, route\_id\_field, from\_date
 | to\_date\_field                      | The name of the field on the Input Route Network that contains the R&H "to date". Must be of type "Date" |
 | output\_gdb                          | The output location for the final dominant route network and, optionally, intermediary geoprocessing steps |
 | temporal\_view\_date                 | The temporal view date for the network. |
-| save\_intermediary\_steps (Optional) | If checked (the default), the various intermediary geoprocessing steps will be saved to the Output Geodatabase. |
+| save\_intermediary\_steps (Optional) | If checked (the default), the various intermediary geoprocessing steps will be saved to the Output Geodatabase. This parameter is only recommended to be unchecked on small Regions of Interest. |
 | validate\_results (Optional)         | If checked (the default), the output Dominant Route Network will be analyzed with the Intersect Geoprocessing tool. If there are overlapping features found with the Intersect tool, they will be saved to the Output Geodatabase with the suffix "\_OVERLAPS". If there are none, the file will not appear in the Output Geodatabase. |
 
 
