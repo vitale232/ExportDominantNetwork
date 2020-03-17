@@ -196,7 +196,7 @@ class ExportDominantNetwork(object):
                     'Route Concurrencies from the Location Referencing Toolbox, on which this ' +
                     'tool depends. Is the Input Route Network part of a R&H ALRS? It better be! ;-)'
                 )
-                arcpy.env.workspace = orig_ws
+            arcpy.env.workspace = orig_ws
             
         # Make sure the TVD can be parsed
         if parameters[5].value:
