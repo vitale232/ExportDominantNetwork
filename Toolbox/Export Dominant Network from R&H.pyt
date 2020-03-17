@@ -9,8 +9,7 @@ import arcpy
 
 class Toolbox(object):
     def __init__(self):
-        """Define the toolbox (the name of the toolbox is the name of the
-        .pyt file)."""
+        """Define the toolbox (the name of the toolbox is the name of the .pyt file)."""
         self.label = 'Export Dominant Network'
         self.alias = 'rhdominant'
 
@@ -18,15 +17,15 @@ class Toolbox(object):
         self.tools = [ExportDominantNetwork]
 
 
-
 class ExportDominantNetwork(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
         self.label = "Export Dominant Network from R&H"
         self.description = (
-            'This tool will apply the concept of Route Dominance to the Enterprise Linear Referencing System, ' +
-            'and it will export a network that includes just the "dominant" routes. The tool requires that the ' +
-            'remove duplicate centerlines workflow has been executed to produce reliable results.'
+            'This tool will apply the concept of Route Dominance to the Enterprise Linear ' +
+            'Referencing System, and it will export a network that includes just the ' +
+            '"dominant" routes. The tool requires that the remove duplicate centerlines ' +
+            'workflow has been executed to produce reliable results.'
         )
         self.canRunInBackground = False
 
@@ -114,7 +113,8 @@ class ExportDominantNetwork(object):
         ]
 
     def isLicensed(self):
-        """Set whether tool is licensed to execute."""
+        """Set whether tool is licensed to execute. Requires a Roads and
+        Highways license, tools from Analysis, and Management"""
         try:
             if arcpy.CheckExtension('highways') != 'Available':
                 raise Exception
@@ -130,6 +130,8 @@ class ExportDominantNetwork(object):
         """Modify the values and properties of parameters before internal
         validation is performed.  This method is called whenever a parameter
         has been changed."""
+        # When LRSN is added to the tool, look for a 'ROUTE_ID' or ROUTEID field
+        # The searching is case insensitive
         if parameters[0].valueAsText:
             if not parameters[1].altered:
                 rid_regex = re.compile('routeid|route_id')
@@ -146,7 +148,7 @@ class ExportDominantNetwork(object):
                             break
 
             ## Look for commone FromDate field names in string type fields when the Input Route Network
-            ## parameter is changed
+            ## parameter is added
             if not parameters[2].altered:
                 from_date_regex = re.compile('from_date|fromdate')
                 found_from_date = False
@@ -163,7 +165,7 @@ class ExportDominantNetwork(object):
 
             if not parameters[3].altered:
             ## Look for commone ToDate field names in string type fields when the Input Route Network
-            ## parameter is changed
+            ## parameter is added
                 to_date_regex = re.compile('to_date|todate')
                 found_to_date = False
                 fields = arcpy.ListFields(parameters[0].valueAsText)
@@ -177,51 +179,33 @@ class ExportDominantNetwork(object):
                             found_to_date = True
                             break
         return
-            # self.get_field_and_or_update_field_list(
-            #     regex_text='routeid|route_id',
-            #     param_index=1,
-            # )
-            # self.get_field_and_or_update_field_list(
-            #     regex_text='fromdate|from_date',
-            #     param_index=2,
-            # )
-            # self.get_field_and_or_update_field_list(
-            #     regex_text='todate|to_date',
-            #     param_index=3,
-            # )
-            ## Look for commone RouteId field names in string type fields when the Input Route Network
-            ## parameter is changed
-
-    # def get_field_and_or_update_field_list(self, regex_text, param_index, input_routes_index=0):
-    #     regex = re.compile(regex_text)
-    #     found_field = False
-    #     fields = arcpy.ListFields(self.parameters[input_routes_index].valueAsText)
-    #     for field in fields:
-    #         if field.type in ['String', 'Date']:
-    #             field_name = field.name.lower()
-    #             if regex.search(field_name):
-    #                 index = fields.index(field)
-    #                 self.parameters[param_index].value = fields[index].name
-    #                 found_field = True
-    #                 break
-    #     if not found_field:
-    #         self.parameters[param_index].filter.list = [field.name for field in fields if field.type in ['String', 'Date']]
-    #     return
 
     def updateMessages(self, parameters):
         """Modify the messages created by internal validation for each tool
-        parameter.  This method is called after internal validation."""
+        parameter.  This method is called after internal validation. The messages
+        are presented in the GUI of the tool, prior to execution"""
+        # Make sure the Lrs_Metadata table exists in the geodatabase of the input LRSN
+        # Calculate Route Concurrencies makes the same check, and wont run without it
         if parameters[0].value:
             input_gdb = os.path.dirname(parameters[0].valueAsText)
             orig_ws = arcpy.env.workspace
             arcpy.env.workspace = input_gdb
             if not arcpy.ListTables('*Lrs_Metadata'):
                 parameters[0].setWarningMessage(
-                    'Lrs_Metadata table was not found. It is required to run the Calculate Route Concurrencies ' +
-                    'from the Location Referencing Toolbox, on which this tool depends. ' +
-                    'Is the Input Route Network part of a R&H ALRS? It better be! ;-)' + str(arcpy.env.workspace) + str(arcpy.ListTables())
+                    'Lrs_Metadata table was not found. It is required to run the Calculate ' +
+                    'Route Concurrencies from the Location Referencing Toolbox, on which this ' +
+                    'tool depends. Is the Input Route Network part of a R&H ALRS? It better be! ;-)'
                 )
                 arcpy.env.workspace = orig_ws
+            
+        # Make sure the TVD can be parsed
+        if parameters[5].value:
+            tvd_list = parameters[5].valueAsText.split(' ')
+            if len(tvd_list) not in [1, 3]:
+                parameters[5].setErrorMessage(
+                    'The input Temporal View Date could not be parsed correctly. ' +
+                    'Try using the datepicker.'
+                )
         return
 
     def execute(self, parameters, messages):
@@ -272,7 +256,8 @@ class ExportDominantNetwork(object):
             )
         else:
             raise ValueError(
-                'The input Temporal View Date could not be parsed correctly. Try using the datepicker in the tool interface.'
+                'The input Temporal View Date could not be parsed correctly. ' +
+                'Try using the datepicker in the tool interface.'
             )
 
         try:
@@ -314,13 +299,21 @@ class ExportDominantNetwork(object):
 
         arcpy.CheckInExtension('highways')
 
-        messages.addWarningMessage('\nWARNING : It is highly recommended that you check the output Dominant Network for nonmonotonic features.')
-        messages.addWarningMessage('WARNING : Use the Data Reviewer extension on the output feature class to check for nonmonotonic features.')
         if delete_where_clause:
             messages.addWarningMessage(
-                '\nWARNING : The following where clause was used to delete features due to issues with the measures:\n' +
+                '\nWARNING : The following where clause was used to delete features ' +
+                'due to issues with the measures:\n' +
                 '           {}'.format(delete_where_clause)
             )
+
+        messages.addWarningMessage(
+            '\nWARNING : It is highly recommended that you check the output ' +
+            'Dominant Network for nonmonotonic features.'
+        )
+        messages.addWarningMessage(
+            'WARNING : Use the Data Reviewer extension on the output feature ' +
+            'class to check for nonmonotonic features.'
+        )
         messages.addMessage('\nDominant network saved as: {}'.format(dominant_network_fc))
 
         return True
@@ -411,11 +404,10 @@ class ExportDominantNetwork(object):
         # Begin geoprocessing logic
         messages.addMessage('\nFiltering input routes to Temporal View Date: {}'.format(temporal_view_date))
         input_geodatabase = os.path.basename(
-            os.path.dirname(
-                input_routes
-            )
+            os.path.dirname(input_routes)
         )
         split_geodatbase_name = os.path.splitext(input_geodatabase)
+        # Set up the TVD query for routes, based on whether input is fgdb or rbdms
         if '.gdb' in split_geodatbase_name:
             base_active_routes_where_clause = (
                 '({from_date} IS NULL OR {from_date} <= date \'{tvd}\') AND ({to_date} IS NULL OR {to_date} >= date \'{tvd}\')'
@@ -424,7 +416,6 @@ class ExportDominantNetwork(object):
             base_active_routes_where_clause = (
                 '({from_date} IS NULL OR {from_date} <= \'{tvd}\') AND ({to_date} IS NULL OR {to_date} >= \'{tvd}\')'
             )
-
         active_routes_where_clause = (
             base_active_routes_where_clause.format(
                 from_date=lrsn_from_date_field_name,
@@ -432,6 +423,8 @@ class ExportDominantNetwork(object):
                 to_date=lrsn_to_date_field_name,
             )
         )
+
+        # Filter input Routes with TVD
         messages.addMessage(' Using WHERE_CLAUSE:\n  {}'.format(active_routes_where_clause))
         routes_tvd_filtered_layer = arcpy.MakeFeatureLayer_management(
             input_routes,
@@ -472,12 +465,17 @@ class ExportDominantNetwork(object):
             dom_events_path = dom_layer
 
         messages.addMessage('\nCreating network gaps at concurrencies')
-        arcpy.Erase_analysis(routes_tvd_filtered, dom_events_path, erased_routes_path)
+        arcpy.Erase_analysis(
+            routes_tvd_filtered,
+            dom_events_path,
+            erased_routes_path
+        )
         messages.addGPMessages()
 
         messages.addMessage('\nSplitting gapped network to single-part geometries')
         arcpy.MultipartToSinglepart_management(
-            erased_routes_path, erased_routes_singlepart_path
+            erased_routes_path,
+            erased_routes_singlepart_path
         )
         messages.addGPMessages()
 
@@ -533,7 +531,8 @@ class ExportDominantNetwork(object):
         if measure_errors:
             messages.addWarningMessage(
                 '\nThere are routes with invalid measure values! ' +
-                'Deleting the following RouteIds from the output network:\n {}'.format(str(', '.join(measure_errors)))
+                'Deleting the following RouteIds from the output network:\n ' +
+                '{}'.format(str(', '.join(measure_errors)))
             )
 
             delete_where_clause = '{} in (\''.format(lrsn_rid_field_name) + '\', \''.join(measure_errors) + '\')'
@@ -587,6 +586,8 @@ class ExportDominantNetwork(object):
         return output_path, delete_where_clause
 
     def map_fields(self, table_field_a, table_field_b, output_name):
+        """table_field_a and table_field_b should be a list with the [table name, field name]
+        Map the field from table a to the field from table b for merge geoprocessing."""
         field_mappings = arcpy.FieldMappings()
 
         field_map = arcpy.FieldMap()
@@ -600,6 +601,10 @@ class ExportDominantNetwork(object):
         return field_mappings
 
     def check_for_overlaps(self, dominant_network_fc, overlaps_fc, messages):
+        """The output network should not have overlapping features. Use the
+        Intersect geoprocessing tool from Analysis with the output as the sole input
+        to intersect. this will find overlapping features within the output dominant
+        network, which indicates the geoprocessing did not go as planned"""
         messages.addMessage('\nSearching for overlapping features in the output Dominant Network')
         arcpy.Intersect_analysis(
             dominant_network_fc,
